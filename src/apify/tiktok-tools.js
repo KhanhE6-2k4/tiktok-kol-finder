@@ -28,7 +28,8 @@ export async function scrapeTikTokHashtags({
     hashtags,
     dateFrom,
     dateTo,
-    limit = 100,
+    limit = 10,
+    sortBy = 'relevance',
 }) {
     if (!Array.isArray(hashtags) || hashtags.length === 0) {
         throw new Error('hashtags must be a non-empty array');
@@ -44,15 +45,23 @@ export async function scrapeTikTokHashtags({
         maxItemsPerQuery: Math.ceil(limit / hashtags.length),
 
         // Video mới nhất trước
-        sortBy: 'latest',
+        sortBy,
 
         // Chỉ lấy video trong khoảng ngày
-        dateFrom,
-        dateTo,
+        // dateFrom,
+        // dateTo,
 
         // Giữ tất cả video, không giới hạn 1 video/creator
         uniqueAuthors: false,
     };
+
+    if (dateFrom) {
+        input.dateFrom = dateFrom;
+    }
+
+    if (dateTo) {
+        input.dateTo = dateTo;
+    }
 
     console.log('Poidata input:');
     console.log(JSON.stringify(input, null, 2));
@@ -72,14 +81,12 @@ export async function searchTikTokKeywords({
     queries,
     dateFrom,
     dateTo,
-    limit = 100,
+    limit = 10,
     sortBy = 'relevance',
 }) {
     if (!Array.isArray(queries) || queries.length === 0) {
         throw new Error('queries must be a non-empty array');
     }
-
-    const maxItemsPerQuery = Math.ceil(limit / queries.length);
 
     const input = {
         searchQueries: queries,
@@ -88,9 +95,9 @@ export async function searchTikTokKeywords({
         maxItems: limit,
 
         // Chia quota tương đối đều cho các query
-        maxItemsPerQuery: Math.ceil(limit / hashtags.length),
+        maxItemsPerQuery: Math.ceil(limit / queries.length),
 
-        // Search theo relevance của TikTok
+        // Search theo relevance/latest của TikTok
         sortBy,
 
         // Chỉ lấy video trong khoảng ngày
