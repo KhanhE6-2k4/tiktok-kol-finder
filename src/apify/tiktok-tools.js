@@ -88,7 +88,7 @@ export async function searchTikTokKeywords({
         maxItems: limit,
 
         // Chia quota tương đối đều cho các query
-        maxItemsPerQuery,
+        maxItemsPerQuery: Math.ceil(limit / hashtags.length),
 
         // Search theo relevance của TikTok
         sortBy,
