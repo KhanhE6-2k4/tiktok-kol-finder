@@ -47,11 +47,90 @@ dateModeInputs.forEach(input => {
 // Quan trọng: chạy ngay khi trang load
 updateDateInputs();
 
+// ============================================================
+// MIN / MAX VALIDATION
+// ============================================================
+
+function setupRangeInputs(minId, maxId) {
+    const minInput = document.getElementById(minId);
+    const maxInput = document.getElementById(maxId);
+
+    const error = document.createElement('div');
+
+    error.className = 'range-error';
+
+    maxInput.parentElement.appendChild(error);
+
+    function sanitize(input) {
+        input.value = input.value.replace(/\D/g, '');
+    }
+
+    function validate() {
+        error.textContent = '';
+
+        // Cho phép để trống
+        if (
+            minInput.value === '' ||
+            maxInput.value === ''
+        ) {
+            return true;
+        }
+
+        const min = Number(minInput.value);
+        const max = Number(maxInput.value);
+
+        if (max < min) {
+            error.textContent =
+                'Giá trị tối đa phải lớn hơn hoặc bằng giá trị tối thiểu.';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    minInput.addEventListener('input', () => {
+        sanitize(minInput);
+        validate();
+    });
+
+    maxInput.addEventListener('input', () => {
+        sanitize(maxInput);
+        validate();
+    });
+
+    return validate;
+}
+
+const validateFollowers = setupRangeInputs(
+    'minFollowers',
+    'maxFollowers'
+);
+
+const validateLikes = setupRangeInputs(
+    'minLikes',
+    'maxLikes'
+);
+
+
+// ============================================================
+// START DISCOVERY
+// ============================================================
+
+
 runBtn.addEventListener('click', async () => {
 
-    const searchType = document.querySelector(
-        'input[name="searchType"]:checked'
-    ).value;
+    // --------------------------------------------------------
+    // Validate Min / Max
+    // --------------------------------------------------------
+
+    if (!validateFollowers() || !validateLikes()) {
+        return;
+    }
+
+     // --------------------------------------------------------
+    // Keywords
+    // --------------------------------------------------------
 
     const keywords = document
         .getElementById('keywords')
@@ -60,13 +139,47 @@ runBtn.addEventListener('click', async () => {
         .map(value => value.trim())
         .filter(Boolean);
 
+    if (keywords.length === 0) {
+        alert('Vui lòng nhập ít nhất một keyword.');
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // Search type
+    // --------------------------------------------------------
+
+    const searchType = document.querySelector(
+        'input[name="searchType"]:checked'
+    ).value;
+
+
+    // --------------------------------------------------------
+    // Limit
+    // --------------------------------------------------------
+
     const limit = Number(
         document.getElementById('limit').value
     );
 
+    if (!Number.isInteger(limit) || limit <= 0) {
+        alert('Số lượng video phải lớn hơn 0.');
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // Sort
+    // --------------------------------------------------------
+
     const sortBy = document.querySelector(
         'input[name="sort"]:checked'
     ).value;
+
+
+    // --------------------------------------------------------
+    // Date
+    // --------------------------------------------------------
 
     const dateMode = document.querySelector(
         'input[name="dateMode"]:checked'
@@ -77,27 +190,68 @@ runBtn.addEventListener('click', async () => {
 
     if (dateMode === 'custom') {
 
-        dateFrom =
-            document.getElementById('dateFrom').value;
-
-        dateTo =
-            document.getElementById('dateTo').value;
+        dateFrom = dateFromInput.value;
+        dateTo = dateToInput.value;
 
         if (!dateFrom || !dateTo) {
-            alert('Vui lòng chọn ngày bắt đầu và ngày kết thúc.');
+            alert(
+                'Vui lòng chọn ngày bắt đầu và ngày kết thúc.'
+            );
             return;
         }
 
         if (dateFrom > dateTo) {
-            alert('Ngày bắt đầu không được lớn hơn ngày kết thúc.');
+            alert(
+                'Ngày bắt đầu không được lớn hơn ngày kết thúc.'
+            );
             return;
         }
     }
 
-    if (keywords.length === 0) {
-        alert('Vui lòng nhập ít nhất một keyword.');
-        return;
-    }
+     // --------------------------------------------------------
+    // Filters
+    // --------------------------------------------------------
+
+    const minFollowersInput =
+        document.getElementById('minFollowers');
+
+    const maxFollowersInput =
+        document.getElementById('maxFollowers');
+
+    const minLikesInput =
+        document.getElementById('minLikes');
+
+    const maxLikesInput =
+        document.getElementById('maxLikes');
+
+
+    // Blank = undefined
+    // Có giá trị = Number
+
+    const minFollowers =
+        minFollowersInput.value === ''
+            ? undefined
+            : Number(minFollowersInput.value);
+
+    const maxFollowers =
+        maxFollowersInput.value === ''
+            ? undefined
+            : Number(maxFollowersInput.value);
+
+    const minLikes =
+        minLikesInput.value === ''
+            ? undefined
+            : Number(minLikesInput.value);
+
+    const maxLikes =
+        maxLikesInput.value === ''
+            ? undefined
+            : Number(maxLikesInput.value);
+
+    // --------------------------------------------------------
+    // Start
+    // --------------------------------------------------------
+
 
     runBtn.disabled = true;
 
@@ -119,7 +273,11 @@ runBtn.addEventListener('click', async () => {
                 limit,
                 sortBy,
                 dateFrom,
-                dateTo
+                dateTo,
+                minFollowers,
+                maxFollowers,
+                minLikes,
+                maxLikes
             })
         });
 

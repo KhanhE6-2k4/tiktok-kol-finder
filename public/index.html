@@ -49,6 +49,106 @@
         autocapitalize="off"
     ></textarea>
 
+    <!-- <div class="filter-grid">
+        <div class="filter-group">
+            <label for="minLikes">
+                Likes tối thiểu
+            </label>
+            <input
+                id="minLikes"
+                type="number"
+                value="0"
+                min="0"
+                placeholder="0"
+            >
+        </div>
+
+        <div class = "filter-group">
+            <label for="maxLikes">
+                Likes tối đa
+            </label>
+            <input
+                id="maxLikes"
+                type="number"
+                value="0"
+                min="0"
+                placeholder="0"
+            >
+        </div>
+
+        <div class = "filter-group">
+            <label for="minFollowers">
+                Followers tối thiểu
+            </label>
+            <input
+                id="minFollowers"
+                type="number"
+                value="0"
+                min="0"
+                placeholder="0"
+            >
+        </div>
+
+        <div class = "filter-group">
+            <label for="maxFollowers">
+                Followers tối đa
+            </label>
+            <input
+                id="maxFollowers"
+                type="number"
+                value="0"
+                min="0"
+                placeholder="0"
+            >
+        </div>
+    </div> -->
+
+    <div class="filter-grid">
+        <div class="filter-group">
+            <label for="minFollowers">Followers tối thiểu</label>
+            <input
+                id="minFollowers"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="filter-group">
+            <label for="maxFollowers">Followers tối đa</label>
+            <input
+                id="maxFollowers"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="filter-group">
+            <label for="minLikes">Likes tối thiểu</label>
+            <input
+                id="minLikes"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="filter-group">
+            <label for="maxLikes">Likes tối đa</label>
+            <input
+                id="maxLikes"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+            >
+        </div>
+    </div>
+
     <label for="limit">Số lượng video</label>
 
     <input
@@ -133,7 +233,7 @@
         <button id="runBtn">
             Start
         </button>
-    </div>:
+    </div>
 
     <div id="status"></div>
 

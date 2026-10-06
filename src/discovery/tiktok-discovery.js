@@ -11,6 +11,10 @@ export async function discoverTikTokVideos({
   dateTo,
   limit = 100,
   sortBy = 'relevance',
+  minFollowers,
+  maxFollowers,
+  minLikes,
+  maxLikes,
 }) {
   let items = [];
 
@@ -20,6 +24,10 @@ export async function discoverTikTokVideos({
       dateFrom,
       dateTo,
       limit,
+      minFollowers,
+      maxFollowers,
+      minLikes,
+      maxLikes,
     });
   } else if (searchType == 'keyword') {
     items = await searchTikTokKeywords({
@@ -28,15 +36,21 @@ export async function discoverTikTokVideos({
       dateTo,
       limit,
       sortBy,
+      minFollowers,
+      maxFollowers,
+      minLikes,
+      maxLikes,
     });
   }
 
-    const videos = items.map(item =>
+    const videos = items
+      .map(item =>
         normalizeTikTokVideo(
             item,
             item.searchQuery ?? ''
         )
     );
 
-    return deduplicateVideos(videos);
+    return deduplicateVideos(videos); 
 }
+

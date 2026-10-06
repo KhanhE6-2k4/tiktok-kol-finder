@@ -29,6 +29,10 @@ export async function scrapeTikTokHashtags({
     dateFrom,
     dateTo,
     limit = 100,
+    minFollowers,
+    maxFollowers,
+    minLikes,
+    maxLikes
 }) {
     if (!Array.isArray(hashtags) || hashtags.length === 0) {
         throw new Error('hashtags must be a non-empty array');
@@ -44,15 +48,39 @@ export async function scrapeTikTokHashtags({
         maxItemsPerQuery: Math.ceil(limit / hashtags.length),
 
         // Video mới nhất trước
-        sortBy: 'latest',
+        sortBy,
 
         // Chỉ lấy video trong khoảng ngày
-        dateFrom,
-        dateTo,
+        // dateFrom,
+        // dateTo,
 
         // Giữ tất cả video, không giới hạn 1 video/creator
         uniqueAuthors: false,
     };
+
+    if (dateFrom) {
+        input.dateFrom = dateFrom;
+    }
+
+    if (dateTo) {
+        input.dateTo = dateTo;
+    }
+
+    if (minFollowers !== undefined) {
+        input.minFollowers = minFollowers;
+    }
+
+    if (maxFollowers !== undefined) {
+        input.maxFollowers = maxFollowers;
+    }
+
+    if (minLikes !== undefined) {
+        input.minLikes = minLikes;
+    }
+
+    if (maxLikes !== undefined) {
+        input.maxLikes = maxLikes;
+    }
 
     console.log('Poidata input:');
     console.log(JSON.stringify(input, null, 2));
@@ -74,12 +102,15 @@ export async function searchTikTokKeywords({
     dateTo,
     limit = 100,
     sortBy = 'relevance',
+    minFollowers,
+    maxFollowers,
+    minLikes,
+    maxLikes
 }) {
     if (!Array.isArray(queries) || queries.length === 0) {
         throw new Error('queries must be a non-empty array');
     }
 
-    const maxItemsPerQuery = Math.ceil(limit / queries.length);
 
     const input = {
         searchQueries: queries,
@@ -88,7 +119,7 @@ export async function searchTikTokKeywords({
         maxItems: limit,
 
         // Chia quota tương đối đều cho các query
-        maxItemsPerQuery: Math.ceil(limit / hashtags.length),
+        maxItemsPerQuery: Math.ceil(limit / queries.length),
 
         // Search theo relevance của TikTok
         sortBy,
@@ -101,12 +132,28 @@ export async function searchTikTokKeywords({
         uniqueAuthors: false,
     };
 
-    if (dateFrom) {
+     if (dateFrom) {
         input.dateFrom = dateFrom;
     }
 
     if (dateTo) {
         input.dateTo = dateTo;
+    }
+
+    if (minFollowers !== undefined) {
+        input.minFollowers = minFollowers;
+    }
+
+    if (maxFollowers !== undefined) {
+        input.maxFollowers = maxFollowers;
+    }
+
+    if (minLikes !== undefined) {
+        input.minLikes = minLikes;
+    }
+
+    if (maxLikes !== undefined) {
+        input.maxLikes = maxLikes;
     }
 
     console.log('\n=== Poidata Input ===');

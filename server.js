@@ -21,11 +21,27 @@ app.post('/api/discover', async (req, res) => {
       sortBy = 'relevance',
       dateFrom,
       dateTo,
+      minFollowers,
+      maxFollowers,
+      minLikes,
+      maxLikes
     } = req.body;
 
     if (!Array.isArray(queries) || queries.length === 0) {
       return res.status(400).json({
         error: 'queries must not be empty',
+      });
+    }
+
+    if (minFollowers !== undefined && maxFollowers !== undefined && minFollowers > maxFollowers) {
+      return res.status(400).json({
+        error: 'minFollowers must be less than or equal to maxFollowers',
+      });
+    }
+
+    if (minLikes !== undefined && maxLikes !== undefined && minLikes > maxLikes) {
+      return res.status(400).json({
+        error: 'minLikes must be less than or equal to maxLikes',
       });
     }
 
@@ -38,6 +54,10 @@ app.post('/api/discover', async (req, res) => {
       sortBy,
       dateFrom,
       dateTo,
+      minFollowers,
+      maxFollowers,
+      minLikes,
+      maxLikes
     });
 
     // =========================
