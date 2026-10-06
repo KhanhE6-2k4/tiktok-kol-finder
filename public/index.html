@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TikTok Scraper</title>
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>TikTok Scraper</h1>
+
+    <label>Kiểu tìm kiếm</label>
+
+    <div class="search-type">
+        <label class="search-type-option">
+            <input
+                type="radio"
+                name="searchType"
+                value="keyword"
+                checked
+            >
+            <span>Từ khóa</span>
+        </label>
+
+        <label class="search-type-option">
+            <input
+                type="radio"
+                name="searchType"
+                value="hashtag"
+            >
+            <span>Hashtag</span>
+        </label>
+    </div>
+
+    <label for="keywords">Nội dung tìm kiếm</label>
+
+    <textarea
+        id="keywords"
+        placeholder="Nhập mỗi cụm từ truy vấn trên một dòng"
+        spellcheck="false"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+    ></textarea>
+
+    <label for="limit">Số lượng video</label>
+
+    <input
+        id="limit"
+        type="number"
+        value="100"
+        min="1"
+        max="500"
+    >
+
+    <label>Thứ tự kết quả</label>
+
+    <div class="radio-group">
+
+        <label>
+            <input
+                type="radio"
+                name="sort"
+                value="relevance"
+                checked
+            >
+            Relevance
+        </label>
+
+        <label>
+            <input
+                type="radio"
+                name="sort"
+                value="latest"
+            >
+            Latest
+        </label>
+
+    </div>
+
+    <label>Ngày đăng</label>
+
+    <div class="radio-group">
+
+        <label>
+            <input
+                type="radio"
+                name="dateMode"
+                value="all"
+                checked
+            >
+            Tất cả
+        </label>
+
+        <label>
+            <input
+                type="radio"
+                name="dateMode"
+                value="custom"
+            >
+            Tùy chọn
+        </label>
+
+    </div>
+
+    <div id="dateOptions" style="margin-top: 30px;" class="date-options hidden">
+
+        <div class="date-field">
+            <label for="dateFrom" class="date-label">Bắt đầu</label>
+            <input
+                id="dateFrom"
+                type="date"
+            >
+        </div>
+
+        <div class="date-field">
+            <label for="dateTo" class="date-label">Kết thúc</label>
+            <input
+                id="dateTo"
+                type="date"
+            >
+        </div>
+
+    </div>
+
+    <div class="btn-wrapper">
+        <button id="runBtn">
+            Start
+        </button>
+    </div>:
+
+    <div id="status"></div>
+
+    <div id="result"></div>
+
+</div>
+
+<script src="/app.js"></script>
+
+</body>
+</html>
