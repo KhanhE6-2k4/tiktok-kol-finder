@@ -7,7 +7,7 @@ node_modules/
 !.env.example
 
 # Google OAuth credentials
-credentials/
+credentials/google-oauth.json
 
 # Google OAuth tokens / local auth data
 data/google-token.json

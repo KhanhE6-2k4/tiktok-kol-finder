@@ -22,20 +22,27 @@ const SCOPES = [
 
 
 async function loadCredentials() {
-    try {
-        await fs.access(CREDENTIALS_PATH);
-    } catch {
-        throw new Error(
-            'Không tìm thấy credentials/google-oauth.json'
+    let credentials;
+    if (process.env.GOOGLE_OAUTH_JSON) {
+        credentials = JSON.parse(
+            process.env.GOOGLE_OAUTH_JSON
+        );
+    } else {
+        try {
+            await fs.access(CREDENTIALS_PATH);
+        } catch {
+            throw new Error(
+                'Không tìm thấy credentials/google-oauth.json'
+            );
+        }
+
+        credentials = JSON.parse(
+            await fs.readFile(
+                CREDENTIALS_PATH,
+                'utf8'
+            )
         );
     }
-
-    const credentials = JSON.parse(
-        await fs.readFile(
-            CREDENTIALS_PATH,
-            'utf8'
-        )
-    );
 
     if (!credentials.web) {
         throw new Error(

@@ -25,6 +25,8 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static('public'));
 
+app.set('trust proxy', 1);
+
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
@@ -32,11 +34,24 @@ app.use(
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
-            secure: false,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax'
         }
     })
 );
+
+// app.use(
+//     session({
+//         secret: process.env.SESSION_SECRET,
+//         resave: false,
+//         saveUninitialized: false,
+//         cookie: {
+//             httpOnly: true,
+//             secure: false,
+//             sameSite: 'lax'
+//         }
+//     })
+// );
 
 app.get(
     '/auth/google',
