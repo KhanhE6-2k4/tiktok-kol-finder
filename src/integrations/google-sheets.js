@@ -514,25 +514,54 @@ export async function validateGoogleSheet(
 }
 
 
+// function createSheetTitle() {
+
+//     const now =
+//         new Date();
+
+//     const pad =
+//         value =>
+//             String(value)
+//                 .padStart(2, '0');
+
+//     return [
+//         now.getFullYear(),
+//         pad(now.getMonth() + 1),
+//         pad(now.getDate())
+//     ].join('-') + '_' + [
+//         pad(now.getHours()),
+//         pad(now.getMinutes()),
+//         pad(now.getSeconds())
+//     ].join('-');
+// }
+
 function createSheetTitle() {
+    const now = new Date();
 
-    const now =
-        new Date();
+    const formatter = new Intl.DateTimeFormat(
+        'en-CA',
+        {
+            timeZone: 'Asia/Ho_Chi_Minh',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hourCycle: 'h23'
+        }
+    );
 
-    const pad =
-        value =>
-            String(value)
-                .padStart(2, '0');
+    const parts = formatter.formatToParts(now);
 
-    return [
-        now.getFullYear(),
-        pad(now.getMonth() + 1),
-        pad(now.getDate())
-    ].join('-') + '_' + [
-        pad(now.getHours()),
-        pad(now.getMinutes()),
-        pad(now.getSeconds())
-    ].join('-');
+    const values = Object.fromEntries(
+        parts.map(part => [
+            part.type,
+            part.value
+        ])
+    );
+
+    return `${values.year}-${values.month}-${values.day}_${values.hour}-${values.minute}-${values.second}`;
 }
 
 
