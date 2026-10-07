@@ -1,2 +1,36 @@
+# Dependencies
 node_modules/
+
+# Environment variables
 .env
+.env.*
+!.env.example
+
+# Google OAuth credentials
+credentials/
+
+# Google OAuth tokens / local auth data
+data/google-token.json
+
+# User discovery results
+data/users/
+
+# Generated discovery results
+data/results.json
+data/results.csv
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/

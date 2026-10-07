@@ -1,8 +1,8 @@
 // Business logic của việc thực hiện, không cần biết Apify hoạt động thế nào
 
 import { scrapeTikTokHashtags, searchTikTokKeywords } from '../apify/tiktok-tools.js';
-import { normalizeTikTokVideo } from '../apify/normalize-tiktok.js';
-import { deduplicateVideos } from '../utils/deduplicate.js';
+import { normalizeTikTokVideo } from '../apify/normalize-result.js';
+import { deduplicateVideos, isValidDiscoveredVideo, rangeFilterTikTokVideos } from './filter.js';
 
 export async function discoverTikTokVideos({
   queries,
@@ -11,8 +11,12 @@ export async function discoverTikTokVideos({
   dateTo,
   limit = 100,
   sortBy = 'relevance',
+
+  isFilteredByFollowers = false,
   minFollowers,
   maxFollowers,
+
+  isFilteredByLikes = false,
   minLikes,
   maxLikes,
 }) {
@@ -20,14 +24,15 @@ export async function discoverTikTokVideos({
 
   if (searchType == 'hashtag') {
     items = await scrapeTikTokHashtags({
-      queries,
+      hashtags: queries,
       dateFrom,
       dateTo,
       limit,
-      minFollowers,
-      maxFollowers,
-      minLikes,
-      maxLikes,
+      sortBy,
+      // minFollowers,
+      // maxFollowers,
+      // minLikes,
+      // maxLikes,
     });
   } else if (searchType == 'keyword') {
     items = await searchTikTokKeywords({
@@ -36,21 +41,36 @@ export async function discoverTikTokVideos({
       dateTo,
       limit,
       sortBy,
-      minFollowers,
-      maxFollowers,
-      minLikes,
-      maxLikes,
+      // minFollowers,
+      // maxFollowers,
+      // minLikes,
+      // maxLikes,
     });
   }
 
-    const videos = items
-      .map(item =>
-        normalizeTikTokVideo(
-            item,
-            item.searchQuery ?? ''
-        )
-    );
+  // 1. Normalize
+  let videos = items.map(item =>
+    normalizeTikTokVideo(
+        item,
+        item.searchQuery ?? ''
+    )
+  );
 
-    return deduplicateVideos(videos); 
+  // 2. Validate (check if the response has the required fields)
+  videos = videos.filter(isValidDiscoveredVideo);
+
+  // 3. Min, max filter
+  videos = rangeFilterTikTokVideos(videos, {
+    isFilteredByFollowers,
+    minFollowers,
+    maxFollowers,
+    isFilteredByLikes,
+    minLikes,
+    maxLikes
+  });
+
+  // 4. Deduplicate
+  videos = deduplicateVideos(videos);
+
+  return videos;
 }
-

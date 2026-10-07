@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 function escapeCsv(value) {
@@ -19,7 +19,7 @@ function escapeCsv(value) {
     return stringValue;
 }
 
-export function exportCreatorsCsv(videos, outputPath) {
+export async function exportCreatorsCsv(videos, outputPath) {
     const creators = new Map();
 
     for (const video of videos) {
@@ -77,36 +77,45 @@ export function exportCreatorsCsv(videos, outputPath) {
     ];
 
     const rows = [
-        headers.join(','),
+        headers,
     ];
 
     for (const creator of creators.values()) {
-        rows.push([
-            creator.creator,
-            creator.creatorName,
-            creator.profileUrl,
-            creator.verified,
-            creator.followers,
-            creator.totalLikes,
-            creator.videoCount,
-            creator.videosFound,
-            [...creator.keywords].join('; '),
-            creator.bio,
-        ]
-            .map(escapeCsv)
-            .join(','));
+      rows.push([
+        creator.creator,
+        creator.creatorName,
+        creator.profileUrl,
+        creator.verified,
+        creator.followers,
+        creator.totalLikes,
+        creator.videoCount,
+        creator.videosFound,
+        [...creator.keywords].join('; '),
+        creator.bio,
+      ]);
+            // .map(escapeCsv)
+            // .join(','));
+  }
+    if (outputPath) {
+      const csvRows = rows.map(row => row.map(escapeCsv).join(','));
+
+      const csv = '\uFEFF' + csvRows.join('\n');
+
+      await fs.mkdir(path.dirname(outputPath), {
+        recursive: true,
+      });
+
+      await fs.writeFile(
+        outputPath,
+        csv,
+        'utf8'
+      );
     }
 
-    const csv = '\uFEFF' + rows.join('\n');
 
-    fs.mkdirSync(path.dirname(outputPath), {
-        recursive: true,
-    });
-
-    fs.writeFileSync(outputPath, csv, 'utf8');
-
-    return {
-        creatorCount: creators.size,
-        outputPath,
+  return {
+      rows,
+      creatorCount: creators.size,
+      outputPath,
     };
 }

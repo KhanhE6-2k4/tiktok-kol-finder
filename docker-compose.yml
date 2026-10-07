@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: sns-scraper-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: sns-scraper
+      POSTGRES_USER: sns-scraper
+      POSTGRES_PASSWORD: sns@scraper@22oopp
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - sns-scraper_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  sns-scraper_postgres_data:

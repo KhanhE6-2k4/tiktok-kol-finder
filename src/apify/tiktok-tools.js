@@ -29,10 +29,11 @@ export async function scrapeTikTokHashtags({
     dateFrom,
     dateTo,
     limit = 100,
-    minFollowers,
-    maxFollowers,
-    minLikes,
-    maxLikes
+    sortBy = 'relevance',
+    // minFollowers,
+    // maxFollowers,
+    // minLikes,
+    // maxLikes
 }) {
     if (!Array.isArray(hashtags) || hashtags.length === 0) {
         throw new Error('hashtags must be a non-empty array');
@@ -54,6 +55,9 @@ export async function scrapeTikTokHashtags({
         // dateFrom,
         // dateTo,
 
+        // Enrich profile của creator
+        // enrichProfiles: true,
+
         // Giữ tất cả video, không giới hạn 1 video/creator
         uniqueAuthors: false,
     };
@@ -66,21 +70,21 @@ export async function scrapeTikTokHashtags({
         input.dateTo = dateTo;
     }
 
-    if (minFollowers !== undefined) {
-        input.minFollowers = minFollowers;
-    }
+    // if (minFollowers !== undefined) {
+    //     input.minFollowers = minFollowers;
+    // }
 
-    if (maxFollowers !== undefined) {
-        input.maxFollowers = maxFollowers;
-    }
+    // if (maxFollowers !== undefined) {
+    //     input.maxFollowers = maxFollowers;
+    // }
 
-    if (minLikes !== undefined) {
-        input.minLikes = minLikes;
-    }
+    // if (minLikes !== undefined) {
+    //     input.minLikes = minLikes;
+    // }
 
-    if (maxLikes !== undefined) {
-        input.maxLikes = maxLikes;
-    }
+    // if (maxLikes !== undefined) {
+    //     input.maxLikes = maxLikes;
+    // }
 
     console.log('Poidata input:');
     console.log(JSON.stringify(input, null, 2));
@@ -102,10 +106,10 @@ export async function searchTikTokKeywords({
     dateTo,
     limit = 100,
     sortBy = 'relevance',
-    minFollowers,
-    maxFollowers,
-    minLikes,
-    maxLikes
+    // minFollowers,
+    // maxFollowers,
+    // minLikes,
+    // maxLikes
 }) {
     if (!Array.isArray(queries) || queries.length === 0) {
         throw new Error('queries must be a non-empty array');
@@ -128,6 +132,9 @@ export async function searchTikTokKeywords({
         // dateFrom,
         // dateTo,
 
+        // Sử dụng khi tìm kiếm theo creator profile
+        // enrichProfiles: true,
+
         // Giữ nhiều video của cùng một creator
         uniqueAuthors: false,
     };
@@ -140,21 +147,21 @@ export async function searchTikTokKeywords({
         input.dateTo = dateTo;
     }
 
-    if (minFollowers !== undefined) {
-        input.minFollowers = minFollowers;
-    }
+    // if (minFollowers !== undefined) {
+    //     input.minFollowers = minFollowers;
+    // }
 
-    if (maxFollowers !== undefined) {
-        input.maxFollowers = maxFollowers;
-    }
+    // if (maxFollowers !== undefined) {
+    //     input.maxFollowers = maxFollowers;
+    // }
 
-    if (minLikes !== undefined) {
-        input.minLikes = minLikes;
-    }
+    // if (minLikes !== undefined) {
+    //     input.minLikes = minLikes;
+    // }
 
-    if (maxLikes !== undefined) {
-        input.maxLikes = maxLikes;
-    }
+    // if (maxLikes !== undefined) {
+    //     input.maxLikes = maxLikes;
+    // }
 
     console.log('\n=== Poidata Input ===');
     console.log(JSON.stringify(input, null, 2));

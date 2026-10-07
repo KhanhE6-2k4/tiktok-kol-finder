@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { discoverTikTokVideos } from './tiktok-discovery.js';
 import { getYesterdayVN } from '../utils/date.js';
-import { validateDiscoveredVideos } from '../utils/validate-discovered.js';
+import { validateDiscoveredVideos } from './filter.js';
 
 // const hashtags = [
 //   '#xuhuong',
