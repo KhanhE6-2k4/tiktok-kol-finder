@@ -273,6 +273,7 @@ export class GoogleSheetService {
 			sheetId,
 			sheetTitle,
 			rowCount: rows.length,
+			creatorCount: rows.length - 1,
 		};
 	}
 }
