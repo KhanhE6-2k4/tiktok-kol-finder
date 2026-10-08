@@ -14,7 +14,7 @@ connectGoogleBtn.addEventListener(
     'click',
     () => {
         window.location.href =
-            '/auth/google';
+            '/api/auth/google';
     }
 );
 

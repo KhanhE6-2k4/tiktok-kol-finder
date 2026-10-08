@@ -1,157 +1,101 @@
-export function rangeFilterTikTokVideos(
-  videos,
+export function rangeFilterSocialContent(
+  contents,
   {
-    verifiedFilter = 'any',
-
-    isFilteredByFollowers = false,
-    minFollowers,
-    maxFollowers,
-
-    isFilteredByLikes = false,
-    minLikes,
-    maxLikes,
-
-    isFilteredByVideoCount = false,
-    minVideoCount,
+    verified = 'any',
+    followers = {},
+    likes = {},
+    videoCount = {},
   }
 ) {
-  console.log('\n=== FILTER DEBUG ===');
+  return contents.filter(content => {
+    const creator = content.creator ?? {};
+    const creatorFollowers = Number(creator.followers ?? 0);
+    const creatorLikes = Number(creator.totalLikes ?? 0);
+    const creatorVideoCount = Number(creator.videoCount ?? 0);
+    const isVerified = creator.verified === true;
 
-  console.log('Followers filter:', {
-      enabled: isFilteredByFollowers,
-      min: minFollowers,
-      max: maxFollowers
-  });
-
-  console.log('Likes filter:', {
-      enabled: isFilteredByLikes,
-      min: minLikes,
-      max: maxLikes
-  });
-
-  console.log('Videos before filter:', videos.length);
-
-  for (const video of videos.slice(0, 10)) {
-    console.log({
-        username: video.creator?.username,
-        followers: video.creator?.followers,
-        likes: video.video?.likes
-    });
-  }
-
-  const filteredVideos = videos.filter(video => {
-    const verified = video.creator?.verified === true;
-    const followers = video.creator?.followers ?? 0;
-    const likes = video.video?.likes ?? 0;
-    const videoCount = Number(
-      video.creator?.videoCount ?? 0
-    );
-
-    if (isFilteredByFollowers) {
-        if (minFollowers !== undefined &&
-            followers < minFollowers
-        ) {
-            return false;
-        }
-
-        if (maxFollowers !== undefined &&
-            followers > maxFollowers
-        ) {
-            return false;
-        }
+    if (followers.min !== undefined && creatorFollowers < followers.min) {
+      return false;
+    }
+    if (followers.max !== undefined && creatorFollowers > followers.max) {
+      return false;
     }
 
-    if (isFilteredByLikes) {
-        if (
-            minLikes !== undefined &&
-            likes < minLikes
-        ) {
-            return false;
-        }
-
-        if (maxLikes !== undefined &&
-            likes > maxLikes
-        ) {
-            return false;
-        }
+    if (likes.min !== undefined && creatorLikes < likes.min) {
+      return false;
+    }
+    if (likes.max !== undefined && creatorLikes > likes.max) {
+      return false;
     }
 
-    if (isFilteredByVideoCount &&
-        minVideoCount !== undefined &&
-        videoCount < minVideoCount
-    ) {
-        return false;
+    if (verified === 'verified' && !isVerified) {
+      return false;
     }
 
-    if (verifiedFilter === 'verified' && !verified) {
-        return false;
+    if (verified === 'not-verified' && isVerified) {
+      return false;
     }
 
-    if (verifiedFilter === 'not-verified' && verified) {
+    if (videoCount.min !== undefined && creatorVideoCount < videoCount.min) {
       return false;
     }
 
     return true;
-  });
-
-  console.log('Videos after filter:', filteredVideos.length);
-  return filteredVideos;
+  })
 }
 
-export function deduplicateVideos(videos) {
-  const seen = new Set();
+export function deduplicateSocialContent(contents) {
+  const visited = new Set();
 
-  return videos.filter(video => {
-      const key = video.video?.id || video.url;
+  return contents.filter(content => {
+    const key = content.video?.id || content.url;
 
-      if (!key) {
-          return true;
-      }
-
-      if (seen.has(key)) {
-          return false;
-      }
-
-      seen.add(key);
+    if (!key) {
       return true;
-  });
+    }
+
+    if (visited.has(key)) {
+      return false;
+    }
+
+    visited.add(key);
+
+    return true;
+  })
 }
 
-export function isValidDiscoveredVideo(video) {
+export function isValidSocialContent(content) {
   return (
-      Boolean(video.url) &&
-      Boolean(video.video?.id) &&
-      Boolean(
-          video.creator?.id ||
-          video.creator?.username
-      )
+    Boolean(content.url) &&
+    Boolean(content.video?.id) &&
+    Boolean(content.creator?.id || content.creator?.username)
   );
 }
 
-export function validateDiscoveredVideos(videos) {
+export function validateSocialContent(contents) {
   const invalid = [];
 
-  videos.forEach((video, index) => {
-      if (!video.url) {
-          invalid.push({
-              index,
-              reason: 'missing url',
-          });
-      }
+  contents.forEach((content, index) => {
+    if (!content.url) {
+      invalid.push({
+        index,
+        reason: 'missing url'
+      });
+    }
 
-      if (!video.video?.id) {
-          invalid.push({
-              index,
-              reason: 'missing video.id',
-          });
-      }
+    if (!content.video?.id) {
+      invalid.push({
+        index,
+        reason: 'missing content.id'
+      });
+    }
 
-      if (!video.creator?.id && !video.creator?.username) {
-          invalid.push({
-              index,
-              reason: 'missing creator',
-          });
-      }
+    if (!content.creator?.id && !content.creator?.username) {
+      invalid.push({
+        index,
+        reason: 'missing creator'
+      });
+    }
   });
 
   return invalid;
