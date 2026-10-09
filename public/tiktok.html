@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Titok Scraper</title>
+
+    <link rel="icon" type="image/png" href="assets/scraper-logo.png">
+
+    <link rel="stylesheet" href="/css/tiktok.css">
+</head>
+
+<body>
+
+<a href="/" class="home-link"> ← Trang chủ </a>
+
+<div class="container">
+
+    <h1>Tiktok Scraper</h1>
+
+    <!-- Nút kết nối google -->
+    <button
+        id="connectGoogleBtn"
+        type="button"
+    >
+        Kết nối Google
+    </button>
+
+    <div id="googleAuthStatus"></div>
+
+
+    <!-- Ô điền URL Google Sheet -->
+    <div class="google-sheet-section">
+
+        <label for="googleSheetUrl">Google Sheet</label>
+
+        <input
+            id="googleSheetUrl"
+            type="text"
+            placeholder="Dán URL Google Sheet..."
+            autocomplete="off"
+        >
+
+        <div class="google-sheet-actions">
+
+            <button
+                id="validateGoogleSheetBtn"
+                type="button"
+            >
+                Kiểm tra
+            </button>
+
+            <button
+                id="exportGoogleSheetBtn"
+                type="button"
+                disabled
+            >
+                Export vào Google Sheet
+            </button>
+
+        </div>
+
+        <div
+            id="googleSheetStatus"
+            class="google-sheet-status"
+        ></div>
+
+    </div>
+
+
+    <!-- Nút chọn kiểu tìm kiếm -->
+    <label>Kiểu tìm kiếm</label>
+
+    <div class="search-type">
+        <label class="search-type-option">
+            <input
+                type="radio"
+                name="searchType"
+                value="keyword"
+                checked
+            >
+            <span>Từ khóa</span>
+        </label>
+
+        <label class="search-type-option">
+            <input
+                type="radio"
+                name="searchType"
+                value="hashtag"
+            >
+            <span>Hashtag</span>
+        </label>
+    </div>
+
+    <label for="keywords">Nội dung tìm kiếm</label>
+
+    <textarea
+        id="keywords"
+        placeholder="Nhập mỗi cụm từ truy vấn trên một dòng"
+        spellcheck="false"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+    ></textarea>
+
+    <div class="filter-section">
+        <label>Verified</label>
+
+        <div class="filter-body">
+            <div class="radio-group">
+                <label>
+                    <input
+                        type="radio"
+                        name="filterVerified"
+                        value="any"
+                        checked
+                    >
+                    Không dùng
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="filterVerified"
+                        value="verified"
+                    >
+                    Có
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="filterVerified"
+                        value="not_verified"
+                    >
+                    Không
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <label>Lọc theo Followers</label>
+        <div class="filter-body">
+            <div class="radio-group">
+                <label>
+                    <input
+                        type="radio"
+                        name="filterFollowers"
+                        value="no"
+                        checked
+                    >
+                    Không
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="filterFollowers"
+                        value="yes"
+                    >
+                    Có
+                </label>
+            </div>
+
+            <div id="followersOptions" class="filter-grid">
+                <div class="filter-group">
+                    <label for="minFollowers">Followers tối thiểu</label>
+                    <input
+                        id="minFollowers"
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        autocomplete="off"
+                        disabled
+                    >
+                </div>
+
+                <div class="filter-group">
+                    <label for="maxFollowers">Followers tối đa</label>
+                    <input
+                        id="maxFollowers"
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        autocomplete="off"
+                        disabled
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <label>Lọc theo Likes</label>
+
+        <div class="filter-body">
+            <div class="radio-group">
+                <label>
+                    <input
+                        type="radio"
+                        name="filterLikes"
+                        value="no"
+                        checked
+                    >
+                    Không
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="filterLikes"
+                        value="yes"
+                    >
+                    Có
+                </label>
+            </div>
+
+            <div id="likesOptions" class="filter-grid">
+                <div class="filter-group">
+                    <label for="minLikes">Likes tối thiểu</label>
+                    <input
+                        id="minLikes"
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        autocomplete="off"
+                        disabled
+                    >
+                </div>
+
+                <div class="filter-group">
+                    <label for="maxLikes">Likes tối đa</label>
+                    <input
+                        id="maxLikes"
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        autocomplete="off"
+                        disabled
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <label>Lọc theo số video của creator</label>
+
+        <div class="filter-body">
+            <div class="radio-group">
+                <label>
+                    <input
+                        type="radio"
+                        name="filterVideoCount"
+                        value="no"
+                        checked
+                    >
+                    Không
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="filterVideoCount"
+                        value="yes"
+                    >
+                    Có
+                </label>
+            </div>
+
+            <div id="videoCountOptions" class="video-count-options">
+                <div class="range-input">
+                    <span class="range-prefix">&gt;=</span>
+
+                    <input
+                        id="minVideoCount"
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        autocomplete="off"
+                        disabled
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <label for="limit">Số lượng video</label>
+
+    <input
+        id="limit"
+        type="number"
+        value="10"
+        min="1"
+        max="500"
+    >
+
+    <label>Thứ tự kết quả</label>
+
+    <div class="filter-body">
+        <div class="radio-group">
+            <label>
+                <input
+                    type="radio"
+                    name="sort"
+                    value="relevance"
+                    checked
+                >
+                Relevance
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="sort"
+                    value="latest"
+                >
+                Latest
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="sort"
+                    value="popular"
+                >
+                Popular
+            </label>
+        </div>
+    </div>
+
+    <!--<label>Ngày đăng</label>
+
+    <div class="filter-body">
+        <div class="radio-group">
+
+            <label>
+                <input
+                    type="radio"
+                    name="dateMode"
+                    value="all"
+                    checked
+                >
+                Tất cả
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="dateMode"
+                    value="custom"
+                >
+                Tùy chọn
+            </label>
+
+        </div>
+    </div>
+
+    <div id="dateOptions" style="margin-top: 30px;" class="date-options hidden">
+
+        <div class="date-field">
+            <label for="dateFrom" class="date-label">Bắt đầu</label>
+            <input
+                id="dateFrom"
+                type="date"
+            >
+        </div>
+
+        <div class="date-field">
+            <label for="dateTo" class="date-label">Kết thúc</label>
+            <input
+                id="dateTo"
+                type="date"
+            >
+        </div>
+
+    </div>-->
+
+
+    <div class="filter-section">
+        <label>Thời gian</label>
+
+        <div class="filter-body">
+            <div class="radio-group">
+                    <label>
+                        <span>Tất cả</span>
+                        <input
+                            type="radio"
+                            name="dateMode"
+                            value="all"
+                            checked
+                        >
+                    </label>
+
+                    <label>
+                        <span>Tùy chọn</span>
+                        <input
+                            type="radio"
+                            name="dateMode"
+                            value="custom"
+                        >
+                    </label>
+            </div>
+
+            <div id="dateOptions" class="date-options disabled">
+                <div class="date-range-options">
+                    <label>
+                        <input
+                            type="radio"
+                            name="dateRange"
+                            value="1d"
+                            checked
+                            disabled
+                        >
+                        1 ngày
+                    </label>
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="dateRange"
+                            value="1w"
+                            disabled
+                        >
+                        1 tuần
+                    </label>
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="dateRange"
+                            value="1m"
+                            disabled
+                        >
+                        1 tháng
+                    </label>
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="dateRange"
+                            value="1y"
+                            disabled
+                        >
+                        1 năm
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-wrapper">
+        <button id="runBtn">
+            Start
+        </button>
+    </div>
+
+    <div id="status"></div>
+
+    <div id="result"></div>
+
+</div>
+
+<script src="/js/tiktok.js"></script>
+
+</body>
+</html>

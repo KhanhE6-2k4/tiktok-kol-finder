@@ -17,11 +17,11 @@ export class GoogleAuthController {
   callback = async (req, res) => {
     try {
       await this.googleAuthService.handleCallback(req);
-      return res.redirect('/?googleAuth=success');
+      return res.redirect('/tiktok?googleAuth=success');
     } catch (error) {
       console.error('Google callback error:', error);
       return res.redirect(
-        `/?googleAuth=error&message=${encodeURIComponent(
+        `/tiktok?googleAuth=error&message=${encodeURIComponent(
             error.message || 'Google authentication failed'
         )}`
       );

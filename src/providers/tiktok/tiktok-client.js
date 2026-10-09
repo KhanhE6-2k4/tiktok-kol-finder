@@ -71,7 +71,7 @@ export class TikTokClient {
       input.dateTo = dateTo;
     }
 
-    console.log('Poidata input:');
+    console.log('t input:');
     console.log(JSON.stringify(input, null, 2));
 
     return this.#runActor(input);

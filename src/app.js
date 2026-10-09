@@ -86,7 +86,32 @@ const downloadController = new DownloadController({
 
 app.use(express.json());
 
-app.use(express.static('public'));
+app.use(express.static('public', { index: false }));
+
+// Trang giới thiệu
+app.get('/', (req, res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
+
+// TikTok
+app.get('/tiktok', (req, res) => {
+  res.sendFile('tiktok.html', { root: 'public' });
+})
+
+// Privacy Policy
+app.get('/privacy', (req, res) => {
+  res.sendFile('privacy.html', { root: 'public' });
+});
+
+// Terms of Service
+app.get('/terms', (req, res) => {
+  res.sendFile('terms.html', { root: 'public' });
+});
+
+
+// app.get('/tiktok', (req, res) => {
+//   res.sendFile('index.html', { root: 'public' });
+// });
 
 app.set('trust proxy', 1);
 
